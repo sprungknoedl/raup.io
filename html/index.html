@@ -2,12 +2,62 @@
 <html>
 	<head>
 		<title>{{.Name}} - the anonymous instant proxy</title>
+
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/static/bootstrap.css">
+		<link rel="icon" href="/static/favicon.png" type="image/png" />
+		<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
 	</head>
 
 	<body>
-	<h1>{{.Name}} - the anonymous instant proxy</h1>
-	<p>{{.Name}} allows you to instantly view a webpage without them seeing any trace of you. <b>All</b> access is proxied via the {{.Name}} service.</p>
-	<p>Some features (especially javascript) are therefore disabled. Sorry for that.</p>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-8 col-sm-offset-2">
+					<div class="text-center">
 
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+							 width="150px" height="150px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" fill="white" xml:space="preserve">
+							<g>
+								<path d="M7.212,26.076c-3.393,0-6.144,2.75-6.144,6.144c0,3.393,2.75,6.143,6.144,6.143c1.198,0,2.312-0.348,3.256-0.94
+									c-0.997-1.49-1.581-3.279-1.581-5.202c0-1.924,0.584-3.713,1.581-5.202C9.523,26.424,8.41,26.076,7.212,26.076z"/>
+								<path d="M20.764,25.328c-0.78-0.283-1.618-0.444-2.496-0.444c-4.052,0-7.336,3.284-7.336,7.336s3.285,7.336,7.336,7.336
+									c1.637,0,3.143-0.542,4.363-1.449c-2.042-1.871-3.331-4.551-3.331-7.532C19.301,28.654,19.842,26.864,20.764,25.328z"/>
+								<path d="M26.47,22.984c-3.003,1.214-5.124,4.151-5.124,7.59c0,4.521,3.667,8.188,8.188,8.188c3.245,0,6.04-1.893,7.365-4.629
+									C31.099,33.71,26.504,28.883,26.47,22.984z"/>
+								<path d="M37.722,13.709c-5.086,0-9.21,4.124-9.21,9.21c0,5.087,4.124,9.211,9.21,9.211c5.087,0,9.21-4.124,9.21-9.211
+									C46.932,17.833,42.809,13.709,37.722,13.709z M41.633,21.423c-1.108,0-2.007-0.899-2.007-2.008s0.898-2.007,2.007-2.007
+									s2.007,0.898,2.007,2.007S42.741,21.423,41.633,21.423z"/>
+							</g>
+						</svg>
+			
+						<h1>{{.Name}}</h1>
+						<p><b>the anonymous instant proxy</b></p>
+					</div>
+
+					<p>{{.Name}} allows you to instantly view a webpage without them seeing any trace of you. <b>all</b> access is proxied via the {{.Name}} service.</p>
+					<p>some features (especially javascript) are therefore disabled. sorry for that.</p>
+
+					<hr />
+
+					<div class="jumbotron text-center">
+						<form action="/redirect" method="POST">
+							<div class="form-group">
+								<label for="url">enter a url to start surfing</label>
+								<input type="url" class="form-control" name="url" placeholder="http://www.example.com" />
+							</div>	
+
+							<button type="submit" class="btn btn-default btn-block">go anonymous</button>
+						</form>
+					</div>
+
+					<div class="small text-center">
+					this service is open source. find the code on <a href="#">github</a>.<br />
+					icon made by <a href="http://www.freepik.com" title="Freepik">freepik</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">cc by 3.0</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

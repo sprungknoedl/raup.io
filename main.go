@@ -14,9 +14,17 @@ import (
 )
 
 var tpl = template.Must(template.ParseGlob("html/*.html"))
-var blacklist = map[string]bool{
-	"/favicon.ico": false,
-	"/robots.txt":  false,
+
+func toURL(rawurl string) string {
+	rawurl = strings.Replace(rawurl, "/http/", "http://", 1)
+	rawurl = strings.Replace(rawurl, "/https/", "https://", 1)
+	return rawurl
+}
+
+func toPath(rawurl string) string {
+	rawurl = strings.Replace(rawurl, "http://", "/http/", 1)
+	rawurl = strings.Replace(rawurl, "https://", "/https/", 1)
+	return rawurl
 }
 
 func IndexR(w http.ResponseWriter, r *http.Request) {
@@ -25,27 +33,31 @@ func IndexR(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, ok := blacklist[r.URL.Path]; ok {
-		http.Error(w, r.URL.Path+" not found", http.StatusNotFound)
+	if r.URL.Path == "/favicon.ico" {
+		http.Redirect(w, r, "/static/favicon.ico", http.StatusMovedPermanently)
 		return
 	}
 
 	http.Redirect(w, r, "/http/"+r.URL.Path, http.StatusMovedPermanently)
 }
 
+func RedirectR(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	dst := r.PostForm.Get("url")
+	http.Redirect(w, r, toPath(dst), http.StatusSeeOther)
+}
+
 func AboutR(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Name string
 	}{
-		Name: "pro.xy",
+		Name: "raup.io",
 	}
 	tpl.ExecuteTemplate(w, "index.html", data)
 }
 
 func ProxyR(w http.ResponseWriter, r *http.Request) {
-	rawurl := r.URL.Path
-	rawurl = strings.Replace(rawurl, "/http/", "http://", 1)
-	rawurl = strings.Replace(rawurl, "/https/", "https://", 1)
+	rawurl := toURL(r.URL.Path)
 
 	// parse request as target url
 	dst, err := url.Parse(rawurl)
@@ -107,9 +119,11 @@ func PatchHtml(w http.ResponseWriter, r *http.Request, dst *url.URL, resp *http.
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", IndexR)
+	mux.HandleFunc("/redirect", RedirectR)
 	mux.HandleFunc("/@about", AboutR)
 	mux.HandleFunc("/http/", ProxyR)
 	mux.HandleFunc("/https/", ProxyR)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 
 	logger := handlers.LoggingHandler(os.Stdout, mux)
 	http.ListenAndServe(":7777", logger)
