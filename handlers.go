@@ -24,7 +24,6 @@ func handleHTML(w http.ResponseWriter, r *http.Request, dst *url.URL, resp *http
 
 	var f func(*html.Node)
 	f = func(node *html.Node) {
-
 		if node.Type == html.ElementNode {
 			for i, attr := range node.Attr {
 
@@ -50,9 +49,8 @@ func handleHTML(w http.ResponseWriter, r *http.Request, dst *url.URL, resp *http
 		// remove script tags as a whole
 		for child := node.FirstChild; child != nil; child = child.NextSibling {
 			if child.Type == html.ElementNode && child.Data == "script" {
-				prev := child.PrevSibling
-				node.RemoveChild(child)
-				child = prev
+				// postpone removal, otherwise it would interfere with the traversal
+				defer node.RemoveChild(child)
 			}
 
 			f(child)
